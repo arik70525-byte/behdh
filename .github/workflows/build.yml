@@ -22,10 +22,23 @@ jobs:
         
     - name: Clean old build caches
       run: |
-        echo "Удаляем старые кэши сборки..."
         rm -rf app/build
         rm -rf build
         rm -rf .gradle
+        
+    - name: Fix Theme and Styles
+      run: |
+        # Ищем манифест и жестко меняем тему
+        MANIFEST=$(find . -name "AndroidManifest.xml" | head -n 1)
+        echo "Правим манифест: $MANIFEST"
+        sed -i 's/@style\/Theme.AppCompat.Light.DarkActionBar/@android:style\/Theme.Material.Light.DarkActionBar/g' "$MANIFEST"
+        
+        # Удаляем файл styles.xml, если он есть, чтобы он не конфликтовал
+        STYLES=$(find . -name "styles.xml" | head -n 1)
+        if [ -n "$STYLES" ]; then
+           echo "Удаляем $STYLES"
+           rm "$STYLES"
+        fi
         
     - name: Grant execute permission for gradlew
       run: |
