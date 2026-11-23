@@ -17,9 +17,11 @@ jobs:
         
     - name: Unzip project
       run: |
-        if [ -f scanner_app.zip ]; then
-          unzip scanner_app.zip -d .
-        fi
+        unzip scanner_app.zip -d .
+        
+    - name: Fix Theme
+      run: |
+        sed -i 's/@style\/Theme.AppCompat.Light.DarkActionBar/@android:style\/Theme.Material.Light.DarkActionBar/g' AndroidManifest.xml
         
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
